@@ -9,8 +9,8 @@ library(forcats)
 data <- read.csv("/Users/akhildatla/Documents/ADA/data.csv")
 
 data %>%
-  mutate(name = fct_reorder(as.character(TTLHHINC), FSFREQ)) %>%
-  ggplot( aes(x=as.character(TTLHHINC), y=FSFREQ, fill=as.character(TTLHHINC))) + 
+  mutate(name = fct_reorder(as.character(TTLHHINC), FSFREQ, .fun = 'median')) %>%
+  ggplot( aes(x=name, y=FSFREQ, fill=as.character(TTLHHINC))) + 
   geom_boxplot() +
   xlab("class") +
   theme(legend.position="none") +
