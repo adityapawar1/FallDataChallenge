@@ -59,6 +59,7 @@ grade_val_combined <- c(sum(dist_active[ dist_active == 5]/grade_val_active_size
                         sum(dist_active[ dist_active == 1]/grade_val_active_size),
                         -sum(dist_inactive[ dist_inactive == 1]/grade_val_inactive_size))
 
+# stored everything in a dataframe for easy access with aes()
 grades_histogram_frame <- data.frame(
   Grade=grade_hist,
   Grades=grade_hist_combined,
