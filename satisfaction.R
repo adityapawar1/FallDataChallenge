@@ -10,11 +10,11 @@ get_region_data <- function(region) {
   filtered_data <-
     as.list(
       fall_data |>
-        filter(CENREG == region, FCSCHOOL != -1) |> 
-        select(FCSCHOOL)
+        filter(CENREG == region, FSFREQ != -1) |> 
+        select(FSFREQ)
     )
   
-  mean <- mean(filtered_data$FCSCHOOL)
+  mean <- mean(filtered_data$FSFREQ)
 }
 
 create_df <- function(list, freq) {
@@ -39,5 +39,5 @@ plot_df <- rbind(northeast_df, south_df, midwest_df, west_df)
 head(plot_df)
 
 plot_usmap(data = plot_df, theme = theme_map()) +
-  labs(title = "US Region School Satisfaction Average")
+  labs(title = "US Region Involvement (FSFREQ)")
 
