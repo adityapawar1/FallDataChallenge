@@ -8,6 +8,8 @@ install.packages("ggcorrplot")
 library(ggcorrplot)
 library(hrbrthemes)
 library(ggridges)
+library(forcats)
+install.packages("forcats")
 
 fall_data <- read.csv("/Users/braydentam/Documents/Work/ADA Work/Fall Data Challenge/dataset.csv")
 
@@ -17,24 +19,20 @@ fall_data$ALLGRADEX[strtoi(fall_data$ALLGRADEX) < 9] <- "Elementary School"
 fall_data$ALLGRADEX[strtoi(fall_data$ALLGRADEX) > 8 & strtoi(fall_data$ALLGRADEX) < 12] <- "Middle School"
 fall_data$ALLGRADEX[strtoi(fall_data$ALLGRADEX) > 11] <- "High School"
 
-data <- data.frame(
-  type = c( fall_data$ALLGRADEX ),
-  value = c( fall_data$FSFREQ )
+df <- data.frame(
+  type = c( as.numeric(fall_data$ALLGRADEX) ),
+  value = c( as.numeric(fall_data$FSFREQ) )
 )
-p <- data %>%
-  ggplot( aes(x=value, fill=type)) +
-  geom_histogram(aes(y = after_stat(count / sum(count))), color="#e9ecef", alpha=1.0, position = 'identity') +
-  scale_fill_manual(values=c("#69b3a2", "#404080", "#f59542")) +
-  theme_ipsum() +
-  labs(fill="")
 
-print(p)
+x<-quantile(fall_data$FSFREQ,c(0.05,0.95))
+data_clean <- fall_data[fall_data$FSFREQ >=x[1] & fall_data$FSFREQ<=x[2],]
+print(data_clean)
 
-
-ggplot(fall_data, aes(x = FSFREQ, y = ALLGRADEX, fill = stat(x))) +
-  geom_density_ridges_gradient() +
-  scale_fill_viridis_c(name = "Depth", option = "C") + 
-  stat_density_ridges(geom = "density_ridges_gradient", calc_ecdf = TRUE) +
-  scale_fill_gradient(low = "#87CEFF", high = "white", name="FSFREQ")
-
-
+data_clean %>%
+  mutate(name = fct_reorder(as.character(ALLGRADEX), FSFREQ, .fun = 'median')) %>%
+  ggplot( aes(x=name, y=FSFREQ, fill=as.character(ALLGRADEX))) + 
+  geom_boxplot() +
+  xlab("class") +
+  theme(legend.position="none") +
+  xlab("") +
+  ylab("Frequency of an adult went to meetings or participated in activities")
